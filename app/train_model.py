@@ -47,3 +47,60 @@ def load_imdb_data(data_dir: Path):
     df = pd.DataFrame(all_reviews, columns=["text", "sentiment"])
 
     return df
+
+
+def train_sentiment_model(config: Config):
+    """Full training pipeline"""
+    # Ensure data directory exists
+    config.DATA_DIR.mkdir(exist_ok=True)
+
+    # Download dataset if not exists
+    dataset_path = config.DATA_DIR / "aclImdb"
+    if not dataset_path.exists():
+        download_imdb_dataset(config.DATA_DIR)
+
+    # Load data
+    df = load_imdb_data(config.DATA_DIR)
+
+    # Split data
+    train_df, test_df = train_test_split(
+        df, test_size=0.2, random_state=42, stratify=df["sentiment"]
+    )
+
+    # Initialize preprocessor
+    preprocessor = TextPreprocessor(config)
+
+    # Prepare training data
+    X_train = preprocessor.prepare_data(train_df["text"], fit=True)
+    X_test = preprocessor.prepare_data(test_df["text"])
+
+    # Initialize and build model
+    model_builder = SentimentModel(config, vocab_size=preprocessor.vocabulary_size)
+    model = model_builder.build()
+
+    # Train model
+    history = model.fit(
+        X_train,
+        train_df["sentiment"],
+        batch_size=config.BATCH_SIZE,
+        epochs=config.EPOCHS,
+        validation_split=config.VALIDATION_SPLIT,
+    )
+
+    # Evaluate model
+    test_loss, test_acc = model.evaluate(X_test, test_df["sentiment"])
+    print(f"Test accuracy : {test_acc}")
+
+    # Save model and tokenizer
+    model_builder.save()
+
+    return model, history
+
+
+def main():
+    config = Config()
+    train_sentiment_model(config)
+
+
+if __name__ == "__main__":
+    main()
