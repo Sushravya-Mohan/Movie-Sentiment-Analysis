@@ -26,6 +26,7 @@ def download_imdb_dataset(data_dir: Path):
     # Download dataset
     response = requests.get(url)
     tar = tarfile.open(fileobj=io.BytesIO(response.content), mode="r:gz")
+    tar.extractall(path=data_dir)
     tar.close()
 
 
