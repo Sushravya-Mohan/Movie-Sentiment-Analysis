@@ -161,3 +161,19 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 "models/hybrid_model.h5" 
+
+# Ignore virtual environments
+venv/
+
+# Ignore datasets
+data/
+
+# Ignore models
+models/
+
+# Ignore Streamlit secrets and config
+.secrets.toml
+config.toml
+
+# Ignore Streamlit deployment YAML
+.github/workflows/streamlit-deployment.yml
