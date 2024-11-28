@@ -103,6 +103,6 @@ class TextPreprocessor:
     @property
     def vocabulary_size(self) -> int:
         """Get size of vocabulary"""
-        if self.tokenizer is None;
+        if self.tokenizer is None:
             raise ValueError("No tokenizer available")
         return len(self.tokenizer.word_index) + 1

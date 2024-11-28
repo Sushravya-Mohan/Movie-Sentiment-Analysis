@@ -1,5 +1,6 @@
-from typing import Dict, Union
+from typing import Dict, Union, Any
 
+from altair import sequence
 import numpy as np
 from tensorflow.keras.models import Model
 
@@ -48,6 +49,9 @@ class SentimentPredictor:
         # Ensure model is loaded
         if self.model is None or self.preprocessor.tokenizer is None:
             self.load()
+
+        # Preprocess text
+        sequence = self.preprocessor.prepare_data([text])
 
         # Get prediction
         prediction = self.model.predict(sequence)[0][0]

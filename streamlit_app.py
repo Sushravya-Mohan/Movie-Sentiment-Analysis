@@ -5,7 +5,7 @@ import traceback
 from app import config
 from app.config import Config
 from app.predictor import SentimentPredictor
-from scripts.train_model import train_sentiment_model
+from app.train_model import train_sentiment_model
 
 
 def init_session_state():
@@ -58,7 +58,7 @@ def main():
                     predictor.load()
 
                 # Predict sentiment
-                result = predictor.predict(model)
+                result = predictor.predict(text)
 
                 # Display results
                 col1, col2, col3 = st.columns(3)
